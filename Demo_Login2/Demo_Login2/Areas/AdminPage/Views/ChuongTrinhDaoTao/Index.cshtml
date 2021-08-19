@@ -1,0 +1,122 @@
+﻿@model List<Demo_Login2.Models.DTO.ChuongTrinhDaoTaoDTO>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/AdminPage/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .tbl-head {
+        text-align: center;
+        background: #FECE7A;
+        border: #fff solid 1px;
+        text-transform: uppercase;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Chương Trình Đào Tạo</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "ThongKe")">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Chương Trình Đào Tạo</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="card">
+            <!-- /.card-header -->
+            <div class="card-body">
+                @using (Html.BeginForm("Index", "ChuongTrinhDaoTao", FormMethod.Post))
+                {
+                    <br />
+                    <div class="form-group row">
+                        <div class="col-sm-2" style="margin: 0 auto; min-width: 478px; display: flex; justify-content: center; align-items: center; ">
+                            <label style="margin-right: 15px; margin-bottom: 0; font-size: 19px; min-width: 200px; ">Chương trình đào tạo</label>
+
+
+
+                            @Html.DropDownList("id", ViewData["khoaDT"] as SelectList, new { @class = "form-control", onchange = @"form.submit();" })
+                        </div>
+                        @*<button class="btn btn-outline-info col-sm-1">Lọc theo khóa</button>*@
+                    </div>
+                }
+                <table class="table table-bordered">
+                    <tr class="tbl-head">
+                        <th rowspan="2">TT</th>
+                        <th rowspan="2">Mã học phần</th>
+                        <th rowspan="2">Tên học phần</th>
+                        <th rowspan="2">Số TC</th>
+                        <th colspan="2">Số Tiết</th>
+                        <th rowspan="2">Học Phần Tiên Quyết</th>
+                        <th rowspan="2">Học Phần Học Trước</th>
+                        <th rowspan="2">Khoa/Bộ môn</th>
+                    </tr>
+                    <tr class="tbl-head">
+                        <th colspan="1">LT</th>
+                        <th colspan="1">TH</th>
+                    </tr>
+
+
+
+                    @{
+                        var stt = 0;
+                        foreach (var HocKi in ViewBag.HocKi)
+                        {
+                            <tr>
+                                <th colspan="9">@HocKi.TenHocKi</th>
+                            </tr>
+                            foreach (var loaiMonHoc in ViewBag.PhanLoaiMonHoc)
+                            {
+                                var TongTC = 0;
+                                <tr>
+                                    <th colspan="9">@loaiMonHoc.LoaiMonHoc</th>
+                                </tr>
+                                foreach (var item in Model)
+                                {
+                                    if (item.IDHocKi == HocKi.ID)
+                                    {
+                                        if (item.IDPhanLoaiMonHoc == loaiMonHoc.ID)
+                                        {
+                                            stt = stt + 1;
+                                            <tr>
+                                                <td>@stt</td>
+                                                <td>@item.Ma_MonHoc</td>
+                                                <td>@item.Ten_MonHoc</td>
+                                                <td>@item.SoTinChi_MonHoc</td>
+                                                <td>@item.SoTietLyThuyet_MonHoc</td>
+                                                <td>@item.SoTietThucHanh_MonHoc</td>
+                                                <td>@item.TenHocPhanTienQuyet</td>
+                                                <td>@item.TenHocPhanHocTruoc</td>
+                                                <td>@item.TenKhoaBoMon</td>
+                                            </tr>
+                                            TongTC = TongTC + item.SoTinChi_MonHoc;
+                                        }
+                                    }
+                                }
+                                if (TongTC > 0)
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-right font-weight-bold">Cộng học phần @loaiMonHoc.LoaiMonHoc:</td>
+                                        <td class="font-weight-bold">@TongTC</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

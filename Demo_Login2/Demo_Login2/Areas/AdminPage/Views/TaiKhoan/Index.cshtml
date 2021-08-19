@@ -1,0 +1,481 @@
+﻿@model List<Demo_Login2.Models.DTO.AccountDTO>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/AdminPage/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Tài khoản</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "ThongKe")">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Tài khoản</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                @*<button id="btnShowModal_Add" type="button" class="btn btn-outline-primary">
+                    <i class="fas fa-plus"></i>
+                    Thêm
+                </button>*@
+                <button class="btn btn-outline-primary" onclick="location.href='@Url.Action("Create","TaiKhoan")'">
+                    <i class="fas fa-plus">
+                        Thêm
+                    </i>
+                </button>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Họ và tên</th>
+                            <th>Mail Văn Lang</th>
+                            @*<th>Khóa</th>*@
+                            <th>Vai trò</th>
+                            <th>Ghi Chú</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.HoVaTen</td>
+                            <td>@item.MailVL</td>
+                            @*<td>@item.IDKhoaDaoTao</td>*@
+                            @foreach (var row in ViewBag.phanloaitaikhoan)
+                            {
+                                if (row.ID == item.PhanLoai)
+                                {
+                                    <td>@row.LoaiTaiKhoan</td>
+                                }
+                            }
+                            <td>@item.GhiChu</td>
+                            <td>
+                                <button class="btn btn-outline-warning" onclick="location.href='@Url.Action("Edit","TaiKhoan",new {id = item.ID})'">
+                                    <i class="fas fa-pen"></i>
+                                    Sửa
+                                </button>
+                                <button class="btn btn-outline-danger btndeleteAccount" data-id="@item.ID">
+                                    <i class="fas fa-trash"></i>
+                                    Xóa
+                                </button>
+                                <button class="btn btn-outline-info" onclick="location.href='@Url.Action("Details","TaiKhoan",new {id = item.ID})'">
+                                    <i class="fas fa-file-invoice"></i>
+                                    Xem chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+
+<!-- .Popup-->
+@*<div class="modal fade" tabindex="-1" id="AddModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thêm tài khoản</h3>
+                <button type="button" class="close" data-dismiss="modal">
+                    x
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="hoten" class="col-sm-4 col-form-label">Họ và tên</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="hoten" value="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="mail" class="col-sm-4 col-form-label">Mail</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mail" value="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Khóa</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">K23</option>
+                            <option value="2">K24</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Lớp</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">T01</option>
+                            <option value="2">T02</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Vai trò</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">Sinh viên</option>
+                            <option value="2">Giảng viên</option>
+                            <option value="2">Khoa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Giảng viên chủ nhiệm</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">Nguyen van a</option>
+                            <option value="1">Nguyen van b</option>
+                            <option value="1">Nguyen van c</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tt_avt">
+                        <img src="https://www.w3schools.com/images/w3schools_green.jpg" alt="W3Schools.com">
+                    </div>
+                <div class="tt_lienlac">
+                        <h5 class="popup_title">Thông tin liên lạc</h5>
+                        <div class="form-group row">
+                            <label for="diachi" class="col-sm-3 col-form-label">Địa chỉ</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="diachi" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="dantoc" class="col-sm-3 col-form-label">Dân tộc</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="dantoc" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="tongiao" class="col-sm-3 col-form-label">Tôn giáo</label>
+                            <div class="col-sm-9">
+                                <select name="tinhtrang" id="tongiao" class="form-control">
+                                    <option value="volvo">Có</option>
+                                    <option value="volvo">Không</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="quocgia" class="col-sm-3 col-form-label">Quốc gia</label>
+                            <div class="col-sm-9">
+                                <select name="tinhtrang" id="quocgia" class="form-control">
+                                    <option value="volvo">Việt nam</option>
+                                    <option value="volvo">Mĩ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="tinh" class="col-sm-3 col-form-label">Tỉnh/Thành phố</label>
+                            <div class="col-sm-9">
+                                <select name="tinhtrang" id="tinh" class="form-control">
+                                    <option value="volvo">TP HCM</option>
+                                    <option value="volvo">Hà Nội</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="quanhuyen" class="col-sm-3 col-form-label">Quận/Huyện</label>
+                            <div class="col-sm-9">
+                                <select name="tinhtrang" id="quanhuyen" class="form-control">
+                                    <option value="volvo">Quận 1</option>
+                                    <option value="volvo">Quận 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="sdt" class="col-sm-3 col-form-label">SDT</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="sdt" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tt_khac">
+                        <h5 class="popup_title">Phân quyền</h5>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="sv"><input type="radio" id="sv" name="chucvu" checked> Sinh viên</label><br />
+                                <label for="gv"><input type="radio" id="gv" name="chucvu"> Giảng viên </label><br />
+                                <label for="khoa"><input type="radio" id="khoa" name="chucvu"> Khoa </label><br>
+                            </div>
+                        </div>
+                        <h5 class="popup_title">Thông tin người liên hệ</h5>
+                        <div class="form-group row">
+                            <label for="hoten_khac" class="col-sm-3 col-form-label">Họ và tên</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="hoten_khac" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="sdt_khac" class="col-sm-3 col-form-label">SDT</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="sdt_khac" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="diachi_khac" class="col-sm-3 col-form-label">Địa chỉ khác</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="diachi_khac" value="">
+                            </div>
+                        </div>
+                        <h5 class="popup_title">Thông tin khóa học</h5>
+                        <div class="form-group row">
+                            <label for="khoahoc" class="col-sm-3 col-form-label">Khóa học</label>
+                            <div class="col-sm-9">
+                                <select name="tinhtrang" id="khoahoc" class="form-control">
+                                    <option value="volvo">Khóa K23 Kỹ thuật phần mềm K232T01</option>
+                                    <option value="volvo">Khóa K23 Kỹ thuật phần mềm K232T02</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnHideModal_Add" class="btn btn-light">
+                    Hủy
+                </button>
+                <button type="button" id="btnAcceptModal_Add" class="btn btn-primary">
+                    Lưu
+                </button>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="EditModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sửa tài khoản</h3>
+                <button type="button" class="close" data-dismiss="modal">
+                    x
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="hoten" class="col-sm-4 col-form-label">Họ và tên</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="hoten" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="mail" class="col-sm-4 col-form-label">Mail</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="mail" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Khóa</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">K23</option>
+                            <option value="2">K23</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Lớp</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">T01</option>
+                            <option value="2">T02</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Vai trò</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">Sinh viên</option>
+                            <option value="2">Giảng viên</option>
+                            <option value="2">Khoa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Giảng viên chủ nhiệm</label>
+                    <div class="col-sm-8">
+                        <select name="tinhtrang" id="lop" class="form-control">
+                            <option value="1">Nguyen van a</option>
+                            <option value="1">Nguyen van b</option>
+                            <option value="1">Nguyen van c</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnHideModal_Edit" class="btn btn-light">
+                    Hủy
+                </button>
+                <button type="button" id="btnAcceptModal_Edit" class="btn btn-primary">
+                    Lưu
+                </button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="DetailModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Xem chi tiết tài khoản</h3>
+                <button type="button" class="close" data-dismiss="modal">
+                    x
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="hoten" class="col-sm-4 col-form-label">Họ và tên</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border"> Nguyễn Văn Tèo</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="mail" class="col-sm-4 col-form-label">Mail</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border"> abc@vanlanguni.vn</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Khóa</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border"> K23</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Lớp</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border"> T02</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Vai trò</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border"> Giảng Viên</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lop" class="col-sm-4 col-form-label">Giảng viên chủ nhiệm</label>
+                    <div class="col-sm-8">
+                        <p class="form-control no-border">Nguyễn Thị Bưởi</p>
+                    </div>
+                </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="btnHideModal_Detail" class="btn btn-dark">
+                    Thoát
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>*@
+<!-- /.Popup-->
+<script src="~/Content/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnShowModal_Add").click(function () {
+            $("#AddModal").modal('show');
+        });
+
+        $("#btnHideModal_Add").click(function () {
+            $("#AddModal").modal('hide');
+        });
+
+        //$("#btnShowModal_Edit").click(function () {
+        //    $("#EditModal").modal('show');
+        //});
+
+        //$("#btnHideModal_Edit").click(function () {
+        //    $("#EditModal").modal('hide');
+        //});
+
+        //$("#btnShowModal_Detail").click(function () {
+        //    $("#DetailModal").modal('show');
+        //});
+
+        //$("#btnHideModal_Detail").click(function () {
+        //    $("#DetailModal").modal('hide');
+        //});
+
+        $(".btndeleteAccount").click(function () {
+            var dataId = $(this).attr("data-id");
+            swal({
+                title: "Xác nhận?",
+                text: "Bạn có chắc muốn xóa!!!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.location = "@Url.Action("Delete", "TaiKhoan")/" + dataId;
+
+                        swal("Xóa thành công", {
+                            icon: "success",
+                        });
+                    }
+                });
+        });
+        //$("#btnAcceptModal_Add").click(function () {
+        //    swal({
+        //        title: "Xác nhận?",
+        //        text: "Bạn có chắc muốn lưu!!!",
+        //        icon: "warning",
+        //        buttons: true,
+        //        dangerMode: true,
+        //    })
+        //        .then((willDelete) => {
+        //            if (willDelete) {
+        //                swal("Lưu thành công", {
+        //                    icon: "success",
+        //                });
+        //            }
+        //        });
+        //});
+        //$("#btnAcceptModal_Edit").click(function () {
+        //    swal({
+        //        title: "Xác nhận?",
+        //        text: "Bạn có chắc muốn lưu!!!",
+        //        icon: "warning",
+        //        buttons: true,
+        //        dangerMode: true,
+        //    })
+        //        .then((willDelete) => {
+        //            if (willDelete) {
+        //                swal("Lưu thành công", {
+        //                    icon: "success",
+        //                });
+        //            }
+        //        });
+        //});
+
+    });
+</script>
+
+
